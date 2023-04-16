@@ -67,6 +67,8 @@ function App() {
         <img className='logo-img' src={logo} alt="logo" />
         <h1 className='product-title'>Our Products</h1>
        
+        
+        <div className='abc'>
         {shoes && shoes.map((shoesProduct,index) => (
           <div className='product-container' key={shoesProduct.id}>
             
@@ -85,6 +87,7 @@ function App() {
            </div>
         ) 
         )}
+        </div>
       </div>
       
 
