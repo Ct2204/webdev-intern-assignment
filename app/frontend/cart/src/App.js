@@ -32,18 +32,20 @@ function App() {
 
   const handleAddToCart = (productId) => {
     const cartItem = cartItems.find((item) => item.id === productId);
-
     if (cartItem) {
+      // Item already exists in cart, increase its quantity
       const newCartItems = cartItems.map((item) => {
         if (item.id === productId) {
           return { ...item, quantity: item.quantity + 1 };
         }
         return item;
       });
+      // setAdded(true);
       setCartItems(newCartItems);
     } else {
+      // Item doesn't exist in cart, add it
       const product = products.find((item) => item.id === productId);
-      setAdded(true);
+      // setAdded(true);
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
   };
@@ -114,7 +116,9 @@ function App() {
                    }}>Add To Cart</button>
                 )
               }
-            
+             
+
+             
            </div>
            </div>
         ) 
