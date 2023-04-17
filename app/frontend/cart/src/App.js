@@ -13,7 +13,7 @@ function App() {
 
   const [products, setProducts] = useState([])
   const [cartItems, setCartItems] = useState([])
-  const [added, setAdded] = useState(false);
+
 
   useEffect(() => {
     
@@ -21,8 +21,10 @@ function App() {
 
     const saveCartItems = JSON.parse(localStorage.getItem('cartItems') || '[]')
     setCartItems(saveCartItems)
+    
   },[])
 
+  
 
   useEffect(() => {
     localStorage.setItem('cartItems',JSON.stringify(cartItems))
@@ -31,29 +33,33 @@ function App() {
 
 
   const handleAddToCart = (productId) => {
-    const cartItem = cartItems.find((item) => item.id === productId);
-    if (cartItem) {
-      // Item already exists in cart, increase its quantity
-      const newCartItems = cartItems.map((item) => {
-        if (item.id === productId) {
-          return { ...item, quantity: item.quantity + 1 };
-        }
-        return item;
-      });
-      // setAdded(true);
-      setCartItems(newCartItems);
-    } else {
-      // Item doesn't exist in cart, add it
       const product = products.find((item) => item.id === productId);
-      // setAdded(true);
+     
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
+      setProducts(
+        products.map((product) => {
+          if (product.id === productId) {
+            return { ...product, added: true };
+          }
+          return product;
+        })
+      );
   };
+  console.log(products)
+
+  cartItems.forEach(item => console.log(item.added))
 
   const handleRemoveFromCart = (productId) => {
     const newCartItems = cartItems.filter((item) => item.id !== productId);
-    setAdded(false);
     setCartItems(newCartItems);
+    setProducts(
+      products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, added: false };
+        }
+        return product;
+      }))
+
   };
 
   const handleIncreaseQuantity = (productId) => {
@@ -82,7 +88,7 @@ function App() {
     }
   };
 
-  const getTotalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const getTotalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
   
 
   
@@ -107,14 +113,14 @@ function App() {
              <h3 className='product-name'>{shoesProduct.name }</h3>
              <p className='product-description'>{shoesProduct.description }</p>
            <div className='product-container-footer'>
-              <span className='product-price'><h3>{`${shoesProduct.price}`}</h3></span>
+              <span className='product-price'><h3>{`$${shoesProduct.price}`}</h3></span>
               
               {
-                added ? (<button className='product-check-btn'>{<BsCheckLg />}</button>) : (
-                  <button className='product-btn' onClick={() => {
-                    handleAddToCart(shoesProduct.id)
-                   }}>Add To Cart</button>
-                )
+                  shoesProduct.added ? (<button className='product-check-btn'>{<BsCheckLg />}</button>) : (
+                    <button className='product-btn' onClick={() => {
+                      handleAddToCart(shoesProduct.id)
+                     }}>Add To Cart</button>  
+                  )
               }
              
 
